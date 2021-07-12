@@ -41,6 +41,7 @@ state("snes9x-x64")
     byte loop:"snes9x-x64.exe", 0x8D8BE8, 0x291;
     byte lastSplit:"snes9x-x64.exe", 0x8D8BE8, 0x276;
     byte intro:"snes9x-x64.exe", 0x8D8BE8, 0x2E0;
+}
 init
 {
     vars.menu = false;
