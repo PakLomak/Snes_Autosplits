@@ -63,7 +63,7 @@ split
     if (old.stage == 0x05 && current.stage == 0x06) return true;
     if (old.stage == 0x06 && current.stage == 0x07) return true;
     if (old.stage == 0x07 && current.stage == 0x08) return true;
-    else if (current.stage == 0x08 && current.loop == 0x00 && (old.lastSplit & 0x04) == 0x00 && (current.lastSplit & 0x04) == 0x04) return true;
+    else if (current.stage == 0x08 && current.loop == 0x00 && (old.lastSplit & 0xfd) == 0x00 && (current.lastSplit & 0xfd) == 0x04) return true;
     if (old.stage == 0x08 && current.stage == 0x09) return true;
     if (current.stage == 0x09)
     {
