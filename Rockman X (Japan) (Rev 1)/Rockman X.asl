@@ -55,10 +55,13 @@ split
     if (settings["black"] && current.end1 == 0x0A && old.end2 == 0x02 && current.end2 == 0x04) return true;
     if (settings["speed"] && current.level == 0x00 && old.damag == 0x2E && current.damag == 0x30 && vars.lvlone == true)    {vars.lvlone = false;
     return true;}
-        if (settings["speed"] && current.sub_lvl == 0x02 || current.sub_lvl == 0x05 || current.sub_lvl == 0x07 || current.sub_lvl == 0x0A || current.sub_lvl == 0x0C || current.sub_lvl == 0x14 || current.sub_lvl == 0x31 || current.sub_lvl == 0x52 || current.sub_lvl == 0x5D || current.sub_lvl == 0x62 || current.sub_lvl == 0x63)
+        if (settings["speed"])
+    {
+        if (current.sub_lvl == 0x02 || current.sub_lvl == 0x05 || current.sub_lvl == 0x07 || current.sub_lvl == 0x0A || current.sub_lvl == 0x0C || current.sub_lvl == 0x14 || current.sub_lvl == 0x31 || current.sub_lvl == 0x52 || current.sub_lvl == 0x5D || current.sub_lvl == 0x62 || current.sub_lvl == 0x63)
         {
             if (current.shine == 0x50 && old.shine != 0x50) return true;
         }
+    }
     if (current.level == 0x0C && current.lvlSigma == 0x03 && old.pes == 0x10 && current.pes == 0x12) return true;
 }
 reset
