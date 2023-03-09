@@ -8,11 +8,11 @@ byte end2: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xD4;
 byte lvlSigma: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x1F7B;
 byte pes: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE69;
 byte reset: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x0;
-byte firstlvl: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE9;
-byte dialog: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xEE8;
-byte shine: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x1940;
+byte shine: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xBBF;
+byte damag: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xC32;
+byte bossroom: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x1D38;
+byte sub_lvl: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE72;
 }
-
 state("Mednafen", "1.29.0")
 {
 byte start: "mednafen.exe", 0x4109808, 0x39;
@@ -23,9 +23,9 @@ byte end2: "mednafen.exe", 0x4109808, 0xD4;
 byte lvlSigma: "mednafen.exe", 0x4109808, 0x1F7B;
 byte pes: "mednafen.exe", 0x4109808, 0xE69;
 byte reset: "mednafen.exe", 0x4109808, 0x0;
-byte firstlvl: "mednafen.exe", 0x4109808, 0xE9;
-byte dialog: "mednafen.exe", 0x4109808, 0xEE8;
-byte shine: "mednafen.exe", 0x4109808, 0x1940;
+byte shine: "mednafen.exe", 0x4109808, 0xBBF;
+byte damag: "mednafen.exe", 0x4109808, 0xC32;
+byte bossroom: "mednafen.exe", 0x4109808, 0x1D38;
 }
 state("Snes9x", "1.60 x64")
 {
@@ -37,19 +37,28 @@ byte end2: "snes9x-x64.exe", 0x8D8BE8, 0xD4;
 byte lvlSigma: "snes9x-x64.exe", 0x8D8BE8, 0x1F7B;
 byte pes: "snes9x-x64.exe", 0x8D8BE8, 0xE69;
 byte reset: "snes9x-x64.exe", 0x8D8BE8, 0x0;
-byte firstlvl: "snes9x-x64.exe", 0x8D8BE8, 0xE9;
-byte dialog: "snes9x-x64.exe", 0x8D8BE8, 0xEE8;
-byte shine: "snes9x-x64.exe", 0x8D8BE8, 0x1940;
+byte shine: "snes9x-x64.exe", 0x8D8BE8, 0xBBF;
+byte damag: "snes9x-x64.exe", 0x8D8BE8, 0xC32;
+byte bossroom: "snes9x-x64.exe", 0x8D8BE8, 0x1D38;
+}
+init
+{
+    vars.lvlone = true;
 }
 start
 {
-    return(old.start == 0x02 && current.start == 0x04 && current.menu == 0xA6);
+    if (old.start == 0x02 && current.start == 0x04 && current.menu == 0xA6) {vars.lvlone = true;
+    return true;}
 }
 split
 {
     if (settings["black"] && current.end1 == 0x0A && old.end2 == 0x02 && current.end2 == 0x04) return true;
-    if (settings["speed"] && current.level == 0x00 && current.firstlvl == 0x01 && old.dialog == 0x00 && current.dialog == 0x01) return true;
-    if (settings["speed"] && current.level != 0x00 && old.shine == 0x00 && current.shine == 0x08) return true;
+    if (settings["speed"] && current.level == 0x00 && old.damag == 0x2E && current.damag == 0x30 && vars.lvlone == true)    {vars.lvlone = false;
+    return true;}
+        if (settings["speed"] && current.sub_lvl == 0x02 || current.sub_lvl == 0x05 || current.sub_lvl == 0x07 || current.sub_lvl == 0x0A || current.sub_lvl == 0x0C || current.sub_lvl == 0x14 || current.sub_lvl == 0x31 || current.sub_lvl == 0x52 || current.sub_lvl == 0x5D || current.sub_lvl == 0x62 || current.sub_lvl == 0x63)
+        {
+            if (current.shine == 0x50 && old.shine != 0x50) return true;
+        }
     if (current.level == 0x0C && current.lvlSigma == 0x03 && old.pes == 0x10 && current.pes == 0x12) return true;
 }
 reset
