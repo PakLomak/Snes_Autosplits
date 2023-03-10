@@ -55,12 +55,12 @@ byte haduken: "snes9x-x64.exe", 0x8D8BE8, 0xE6B;
 init
 {
     vars.lvlone = true;
-    vars.boss = 0;
+    vars.boss = false;
 }
 start
 {
     if (old.start == 0x02 && current.start == 0x04 && current.menu == 0xA6) {vars.lvlone = true;
-    vars.boss = 0;
+    vars.boss = false;
     return true;}
 }
 split
@@ -70,10 +70,10 @@ split
     return true;}
     if (settings["speed"])
     {
-    if (current.bossff == 0xFF) vars.boss = vars.boss + 1;
-    if (current.shine == 0x50 && old.shine != 0x50 && vars.boss >= 1)
+    if (current.bossff == 0xFF) vars.boss = true;
+    if (current.shine == 0x50 && old.shine != 0x50 && vars.boss == true)
         {
-            vars.boss = 0;
+            vars.boss = false;
             return true;
         }
     }
