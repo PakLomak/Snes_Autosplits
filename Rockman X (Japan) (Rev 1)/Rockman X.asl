@@ -77,7 +77,7 @@ split
     if (settings["speed"])
     {
         if (current.level == 0x08 && old.sub_lvl == 0x04 && current.sub_lvl == 0x00) return true;
-        if (current.level == 0x03 && old.sub_lvl == 0x04 && current.sub_lvl == 0x00) return true;
+        if (current.level == 0x03 && old.sub_lvl == 0x04D && current.sub_lvl == 0x00) return true;
     }
     if (current.level == 0x0C && current.lvlSigma == 0x03 && old.pes == 0x10 && current.pes == 0x12) return true;
 }
