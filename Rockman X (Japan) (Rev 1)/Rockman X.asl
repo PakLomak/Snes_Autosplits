@@ -12,6 +12,9 @@ byte shine: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xBBF;
 byte damag: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xC32;
 byte bossroom: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x1D38;
 byte sub_lvl: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE72;
+byte bossff: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE68;
+byte heart: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0x167E;
+byte haduken: "MesenSCore.dll", 0x4263DA8, 0x48, 0x5F0, 0x48, 0xE6B;
 }
 state("Mednafen", "1.29.0")
 {
@@ -26,6 +29,10 @@ byte reset: "mednafen.exe", 0x4109808, 0x0;
 byte shine: "mednafen.exe", 0x4109808, 0xBBF;
 byte damag: "mednafen.exe", 0x4109808, 0xC32;
 byte bossroom: "mednafen.exe", 0x4109808, 0x1D38;
+byte sub_lvl: "mednafen.exe", 0x4109808, 0xE72;
+byte bossff: "mednafen.exe", 0x4109808, 0xE68;
+byte heart: "mednafen.exe", 0x4109808, 0x167E;
+byte haduken: "mednafen.exe", 0x4109808, 0xE6B;
 }
 state("Snes9x", "1.60 x64")
 {
@@ -40,14 +47,20 @@ byte reset: "snes9x-x64.exe", 0x8D8BE8, 0x0;
 byte shine: "snes9x-x64.exe", 0x8D8BE8, 0xBBF;
 byte damag: "snes9x-x64.exe", 0x8D8BE8, 0xC32;
 byte bossroom: "snes9x-x64.exe", 0x8D8BE8, 0x1D38;
+byte sub_lvl: "snes9x-x64.exe", 0x8D8BE8, 0xE72;
+byte bossff: "snes9x-x64.exe", 0x8D8BE8, 0xE68;
+byte heart: "snes9x-x64.exe", 0x8D8BE8, 0x167E;
+byte haduken: "snes9x-x64.exe", 0x8D8BE8, 0xE6B;
 }
 init
 {
     vars.lvlone = true;
+    vars.boss = 0;
 }
 start
 {
     if (old.start == 0x02 && current.start == 0x04 && current.menu == 0xA6) {vars.lvlone = true;
+    vars.boss = 0;
     return true;}
 }
 split
@@ -55,13 +68,17 @@ split
     if (settings["black"] && current.end1 == 0x0A && old.end2 == 0x02 && current.end2 == 0x04) return true;
     if (settings["speed"] && current.level == 0x00 && old.damag == 0x2E && current.damag == 0x30 && vars.lvlone == true)    {vars.lvlone = false;
     return true;}
-        if (settings["speed"])
+    if (settings["speed"])
     {
-        if (current.sub_lvl == 0x02 || current.sub_lvl == 0x05 || current.sub_lvl == 0x07 || current.sub_lvl == 0x0A || current.sub_lvl == 0x0C || current.sub_lvl == 0x14 || current.sub_lvl == 0x31 || current.sub_lvl == 0x52 || current.sub_lvl == 0x5D || current.sub_lvl == 0x62 || current.sub_lvl == 0x63)
+    if (current.bossff == 0xFF) vars.boss = vars.boss + 1;
+    if (current.shine == 0x50 && old.shine != 0x50 && vars.boss >= 1)
         {
-            if (current.shine == 0x50 && old.shine != 0x50) return true;
+            vars.boss = 0;
+            return true;
         }
     }
+    if (settings["speed"] && current.level == 0x08 && old.heart == 0x00 && current.heart == 0x04) return true;
+    if (settings["speed"] && current.level == 0x03 && current.haduken == 0x0C && current.shine == 0x50 && old.shine != 0x50) return true;
     if (current.level == 0x0C && current.lvlSigma == 0x03 && old.pes == 0x10 && current.pes == 0x12) return true;
 }
 reset
